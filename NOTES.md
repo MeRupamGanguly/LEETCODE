@@ -145,5 +145,148 @@ func majorityElement(nums []int) int {
 	return majorityElem
 }
 ```
+## 7. Group Anagrams
+**File:** 7-Group-Anagrams.go  
+**Goal:** Group words that contain the same characters into sub-lists.  
+
+**Logic:**  
+The code creates a unique character-frequency "signature" for each string to use as a map key.  
+
+**Process:**  
+- Initialize a map where the key is a string representation of character counts and the value is a slice of strings.  
+- For each word, create a rune array of size 26 (for 'a'-'z') to count occurrences.  
+- Convert this count array into a string so all anagrams produce the same key.  
+- Append the original word to the map at that specific key.  
+- Return all map values as a 2D slice.  
+
+```go
+func groupAnagrams(strs []string) [][]string {
+	if len(strs) < 1 {
+		return [][]string{}
+	}
+	if len(strs) == 1 {
+		return [][]string{strs}
+	}
+	anagramMap := make(map[string][]string)
+	out := [][]string{}
+	for _, s := range strs {
+		charIntArr := make([]rune, 26)
+		for _, r := range s {
+			charIntArr[r-'a']++
+		}
+		anagramMap[string(charIntArr)] = append(anagramMap[string(charIntArr)], s)
+	}
+	for _, v := range anagramMap {
+		out = append(out, v)
+	}
+	return out
+}
+```
+---
+
+## 8. Top K Frequent Elements
+**File:** 8-Top-K-Frequent-Elements.go  
+**Goal:** Return the *k* most frequent numbers in an array.  
+
+**Logic:**  
+It uses a frequency map followed by a "bucket" mapping where frequencies act as indices.  
+
+**Process:**  
+- Populate `freqMap` to count how many times each integer appears.  
+- Reverse this relationship in `countMap`, where the key is the frequency and the value is a slice of numbers with that frequency.  
+- Iterate backward from the highest possible frequency (the array length) to find the most frequent items.  
+- Collect these items into an output slice until the top *k* elements are gathered.  
+
+```go
+
+func topKFrequent(nums []int, k int) []int {
+	if len(nums) <= 1 {
+		return nums
+	}
+	freqMap := make(map[int]int)
+	countMap := make(map[int][]int)
+	for i := range nums {
+		freqMap[nums[i]]++
+	}
+	for k, v := range freqMap {
+		countMap[v] = append(countMap[v], k)
+	}
+	out := []int{}
+	for i := len(nums); i > 0; i-- {
+		out = append(out, countMap[i]...)
+	}
+	return out[:k]
+}
+```
+---
+
+## 9. Sort Characters By Frequency
+**File:** 9-Sort-Characters-By-Frequency.go  
+**Goal:** Sort a string so characters appearing more often come first.  
+
+**Logic:**  
+Similar to bucket sort, characters are grouped by their counts and then rebuilt into a string in descending order of those counts.  
+
+**Process:**  
+- Count character occurrences using `freqMap`.  
+- Build `countMap` to group all characters that share the same frequency.  
+- Starting from the largest possible frequency index, retrieve the characters from the map.  
+- For each character found, append it to the result rune slice *i* times (where *i* is the current frequency).  
+- Return the final string.  
+```go
+func frequencySort(s string) string {
+	freqMap := make(map[rune]int)
+	countMap := make(map[int][]rune)
+	for _, r := range s {
+		freqMap[r]++
+	}
+	for k, v := range freqMap {
+		countMap[v] = append(countMap[v], k)
+	}
+	out := []rune{}
+	for i := len(s); i > 0; i-- {
+		if len(countMap[i]) < 1 {
+			continue
+		}
+		aR := countMap[i]
+		for j := 0; j < len(countMap[i]); j++ {
+			r := aR[j]
+			for k := 0; k < i; k++ {
+				out = append(out, r)
+			}
+		}
+	}
+	return string(out)
+}
+```
+---
+
+## 10. First Unique Character in a String
+**File:** 10-First-Unique-Character.go  
+**Goal:** Find the index of the first character that appears only once in the string.  
+
+**Logic:**  
+A two-pass approach is used to count character frequencies and then check them in the original sequence.  
+
+**Process:**  
+- **Pass 1:** Iterate through the string once, incrementing counts for each character in `freqMap`.  
+- **Pass 2:** Iterate through the string a second time from start to finish.  
+  - For each character, check its value in the map.  
+  - If the value is 1, immediately return the current index.  
+- If the loop completes without finding a unique character, return `-1`.  
+```go
+func firstUniqChar(s string) int {
+	freqMap := make(map[rune]int)
+	for _, r := range s {
+		freqMap[r]++
+	}
+	for i, r := range s {
+		if freqMap[r] == 1 {
+			return i
+		}
+	}
+	return -1
+}
+```
 ---
 
