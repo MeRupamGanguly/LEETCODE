@@ -1,7 +1,5 @@
 package main
 
-import "fmt"
-
 func firstUniqChar(s string) int {
 	freqMap := make(map[rune]int)
 	for _, r := range s {
@@ -15,9 +13,9 @@ func firstUniqChar(s string) int {
 	return -1
 }
 
-func main() {
-	fmt.Println(firstUniqChar("leetcode"))
-	fmt.Println(firstUniqChar("loveleetcode"))
-	fmt.Println(firstUniqChar("aabb"))
-	fmt.Println(firstUniqChar("aaaaaaaaaaavvvvvvvvvvvvvvvvvvvbbbbbbbbbbbbbbbbbbbbcde"))
-}
+// func main() {
+// 	fmt.Println(firstUniqChar("leetcode"))
+// 	fmt.Println(firstUniqChar("loveleetcode"))
+// 	fmt.Println(firstUniqChar("aabb"))
+// 	fmt.Println(firstUniqChar("aaaaaaaaaaavvvvvvvvvvvvvvvvvvvbbbbbbbbbbbbbbbbbbbbcde"))
+// }
